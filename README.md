@@ -41,6 +41,14 @@ python src/sigmorphon19-task1-decode.py \
 
 Link: https://www.dropbox.com/sh/lx010wra0jagfhw/AACFQPWlMCD2xIzQ5ChgHVWha
 
+Size of models:
+```
+2.9G	sigmorphon19-task1-model/0-hard
+2.9G	sigmorphon19-task1-model/0-mono
+2.9G	sigmorphon19-task1-model/0-soft
+2.9G	sigmorphon19-task1-model/1-mono
+```
+
 ## Baseline Performance
 
 Link: https://docs.google.com/spreadsheets/d/1yqCf38Qub5TDEH_F9PzxHuF3adymhKZZHnEVUW94yKY/
