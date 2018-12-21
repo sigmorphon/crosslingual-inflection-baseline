@@ -14,7 +14,7 @@ numpy
 tqdm
 ```
 
-## Training from scratch
+## Training from Scratch
 
 ```bash
 # 0-soft
@@ -27,7 +27,7 @@ sh scripts/run-task1-monotag.sh hmm adyghe--kabardian
 sh scripts/run-task1-monotag.sh hmmfull adyghe--kabardian
 ```
 
-## Decoding with Pretrained model
+## Decoding with Pretrained Model
 
 ```bash
 python src/sigmorphon19-task1-decode.py \
@@ -35,3 +35,7 @@ python src/sigmorphon19-task1-decode.py \
     --lang kabardian \
     --model sample/model/adyghe--kabardian.1-mono.pth
 ```
+
+## Pretrained Models
+
+link: https://www.dropbox.com/sh/lx010wra0jagfhw/AACFQPWlMCD2xIzQ5ChgHVWha
