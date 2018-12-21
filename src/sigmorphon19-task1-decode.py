@@ -1,5 +1,5 @@
 '''
-Decode model and write to stdout
+Decode model
 '''
 import argparse
 from functools import partial
@@ -8,12 +8,14 @@ import torch
 
 from dataloader import BOS, EOS, UNK_IDX
 from model import decode_beam_search, decode_greedy
+from util import maybe_mkdir
 
 
 def get_args():
     # yapf: disable
     parser = argparse.ArgumentParser()
-    parser.add_argument('--file', required=True, help='Dev/Test file')
+    parser.add_argument('--in_file', required=True, help='Dev/Test file')
+    parser.add_argument('--out_file', required=True, help='Output file')
     parser.add_argument('--lang', required=True, help='Language tag')
     parser.add_argument('--model', required=True, help='Path to model')
     parser.add_argument('--max_len', default=100, type=int)
@@ -41,7 +43,7 @@ def read_file(filename, lang_tag):
     with open(filename, 'r', encoding='utf-8') as fp:
         for line in fp.readlines():
             lemma, _, tags = line.strip().split('\t')
-            yield list(lemma),  [lang_tag] + tags.split(';')
+            yield list(lemma), [lang_tag] + tags.split(';')
 
 
 def encode(model, lemma, tags, device):
@@ -78,11 +80,13 @@ def main():
     trg_i2c = {i: c for c, i in model.trg_c2i.items()}
     decode_trg = lambda seq: [trg_i2c[i] for i in seq]
 
-    for lemma, tags in read_file(opt.file, opt.lang):
-        src = encode(model, lemma, tags, device)
-        pred, _ = decode_fn(model, src)
-        pred_out = ''.join(decode_trg(pred))
-        print(pred_out)
+    maybe_mkdir(opt.out_file)
+    with open(opt.out_file, 'w', encoding='utf-8') as fp:
+        for lemma, tags in read_file(opt.in_file, opt.lang):
+            src = encode(model, lemma, tags, device)
+            pred, _ = decode_fn(model, src)
+            pred_out = ''.join(decode_trg(pred))
+            fp.write(f'{lemma}\t{pred_out}\t{tags[1:]}\n')
 
 
 if __name__ == '__main__':

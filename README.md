@@ -31,11 +31,16 @@ sh scripts/run-task1-monotag.sh hmmfull adyghe--kabardian
 
 ```bash
 python src/sigmorphon19-task1-decode.py \
-    --file sample/adyghe--kabardian/kabardian-dev \
+    --in_file sample/adyghe--kabardian/kabardian-dev \
+    --out_file decode/adyghe--kabardian-dev-out \
     --lang kabardian \
     --model sample/model/adyghe--kabardian.1-mono.pth
 ```
 
 ## Pretrained Models
 
-link: https://www.dropbox.com/sh/lx010wra0jagfhw/AACFQPWlMCD2xIzQ5ChgHVWha
+Link: https://www.dropbox.com/sh/lx010wra0jagfhw/AACFQPWlMCD2xIzQ5ChgHVWha
+
+## Baseline Performance
+
+Link: https://docs.google.com/spreadsheets/d/1yqCf38Qub5TDEH_F9PzxHuF3adymhKZZHnEVUW94yKY/
