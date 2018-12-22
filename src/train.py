@@ -266,8 +266,8 @@ class Trainer(object):
         self.model.eval()
         cnt = 0
         sampler, nb_instance = self.iterate_instance(mode)
-        with open(f'{write_fp}.{mode}.hypothesis', 'w') as out_fp, \
-             open(f'{write_fp}.{mode}.targets', 'w') as trg_fp:
+        with open(f'{write_fp}.{mode}.guess', 'w') as out_fp, \
+             open(f'{write_fp}.{mode}.gold', 'w') as trg_fp:
             for src, trg in tqdm(sampler(), total=nb_instance):
                 pred, _ = decode_fn(self.model, src)
                 trg = self.data.decode_target(trg)[1:-1]

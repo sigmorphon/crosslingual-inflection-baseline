@@ -86,7 +86,7 @@ def main():
             src = encode(model, lemma, tags, device)
             pred, _ = decode_fn(model, src)
             pred_out = ''.join(decode_trg(pred))
-            fp.write(f'{lemma}\t{pred_out}\t{tags[1:]}\n')
+            fp.write(f'{"".join(lemma)}\t{pred_out}\t{";".join(tags[1:])}\n')
 
 
 if __name__ == '__main__':
