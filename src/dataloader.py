@@ -235,6 +235,17 @@ class SIGMORPHON2019Task1(Seq2SeqDataLoader):
                 yield src, trg
 
 
+class SIGMORPHON2019Task2(SIGMORPHON2019Task1):
+    def read_file(self, file):
+        with open(file, 'r', encoding='utf-8') as fp:
+            for line in fp.readlines():
+                toks = line.strip().split('\t')
+                if len(toks) < 2 or line[0] == '#':
+                    continue
+                word, lemma, tags = toks[1], toks[2], toks[5]
+                yield list(word), list(lemma), tags.split(';')
+
+
 class TagSIGMORPHON2019Task1(SIGMORPHON2019Task1):
     def _iter_helper(self, file):
         tag_shift = len(self.source) - self.nb_attr
@@ -327,3 +338,7 @@ class TagSIGMORPHON2019Task1(SIGMORPHON2019Task1):
             yield ((torch.tensor(src, device=self.device).view(len(src), 1),
                     torch.tensor(tags, device=self.device).view(1, len(tags))),
                    torch.tensor(trg, device=self.device).view(len(trg), 1))
+
+
+class TagSIGMORPHON2019Task2(TagSIGMORPHON2019Task1, SIGMORPHON2019Task2):
+    pass

@@ -26,6 +26,7 @@ tqdm = partial(tqdm, bar_format='{l_bar}{r_bar}')
 
 class Data(util.NamedEnum):
     sigmorphon19task1 = 'sigmorphon19task1'
+    sigmorphon19task2 = 'sigmorphon19task2'
 
 
 class Arch(util.NamedEnum):
@@ -101,6 +102,9 @@ class Trainer(object):
         if dataset == Data.sigmorphon19task1:
             assert isinstance(train, list) and len(train) == 2
             self.data = dataloader.TagSIGMORPHON2019Task1(train, dev, test)
+        elif dataset == Data.sigmorphon19task2:
+            assert isinstance(train, list) and len(train) == 1
+            self.data = dataloader.TagSIGMORPHON2019Task2(train, dev, test)
         else:
             raise ValueError
         # yapf: enable
@@ -381,7 +385,8 @@ def main():
             break
         trainer.save_model(epoch_idx, devloss, eval_res, opt.model)
         trainer.save_training(opt.model)
-    save_fps = trainer.reload_and_test(opt.model, opt.bs, opt.bestacc)
+    with torch.no_grad():
+        save_fps = trainer.reload_and_test(opt.model, opt.bs, opt.bestacc)
     trainer.cleanup(opt.saveall, save_fps, opt.model)
 
 
