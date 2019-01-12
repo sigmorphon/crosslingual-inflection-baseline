@@ -18,6 +18,14 @@ tqdm
 
 Link: https://docs.google.com/spreadsheets/d/1yqCf38Qub5TDEH_F9PzxHuF3adymhKZZHnEVUW94yKY/
 
+Task 1 decoded files:
+- `0-soft`: https://www.dropbox.com/s/ruom2g921t4kzzr/BASELINE-0SOFT-00-1.tar.gz
+- `0-hard`: https://www.dropbox.com/s/g0b3z5hh9dkp3nz/BASELINE-0HARD-00-1.tar.gz
+- `0-mono`: https://www.dropbox.com/s/dg2fawbahqqzqdl/BASELINE-0MONO-00-1.tar.gz
+- `1-mono`: https://www.dropbox.com/s/n9asg9fo8e5yklx/BASELINE-1MONO-00-1.tar.gz
+
+Task 2 decoded files: https://www.dropbox.com/s/2kqkhsu0kil6rzu/BASELINE-DEV-00-2.tar.gz?dl=0
+
 ## Task 1
 
 ### Training from Scratch
