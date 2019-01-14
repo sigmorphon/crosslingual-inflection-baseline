@@ -14,7 +14,7 @@ numpy
 tqdm
 ```
 
-### Baseline Performance
+## Baseline Performance
 
 Available for all baselines [here](https://docs.google.com/spreadsheets/d/1R1dtj2YFhPaOv4-VE1TpcCJ5_WzKO6rZ8ObMxJsM020/edit?usp=sharing).
 
@@ -24,7 +24,7 @@ Task 1 decoded files:
 - `0-mono`: https://www.dropbox.com/s/dg2fawbahqqzqdl/BASELINE-0MONO-00-1.tar.gz
 - `1-mono`: https://www.dropbox.com/s/n9asg9fo8e5yklx/BASELINE-1MONO-00-1.tar.gz
 
-### Training from Scratch
+## Training from Scratch
 
 ```bash
 # 0-soft
@@ -37,7 +37,7 @@ sh scripts/run-task1-monotag.sh hmm adyghe--kabardian
 sh scripts/run-task1-monotag.sh hmmfull adyghe--kabardian
 ```
 
-### Decoding with Pretrained Model
+## Decoding with Pretrained Model
 
 ```bash
 python src/sigmorphon19-task1-decode.py \
@@ -47,7 +47,7 @@ python src/sigmorphon19-task1-decode.py \
     --model sample/task1/model/adyghe--kabardian.1-mono.pth
 ```
 
-### Pretrained Models
+## Pretrained Models
 
 Link: https://www.dropbox.com/sh/lx010wra0jagfhw/AACFQPWlMCD2xIzQ5ChgHVWha
 
