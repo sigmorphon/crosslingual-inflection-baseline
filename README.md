@@ -1,12 +1,12 @@
 # crosslingual-inflection-baseline
 
 ## Environment Installation
-Machine with GPU:
+Machine with GPU (Tested on Linux):
 ```bash
 conda env create -f environment.yml
 ```
 
-Manually Installation:
+Manually Installation (Recommend for machine without GPU):
 ```
 python>=3.6
 pytorch=1.0
