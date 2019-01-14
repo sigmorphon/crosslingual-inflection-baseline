@@ -1,4 +1,4 @@
-# crosslingual-inflection-baseline
+# contextual-analysis-baseline
 
 ## Environment Installation
 Machine with GPU (Tested on Linux):
