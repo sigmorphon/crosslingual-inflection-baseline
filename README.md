@@ -16,7 +16,7 @@ tqdm
 
 ### Baseline Performance
 
-Link: https://docs.google.com/spreadsheets/d/1yqCf38Qub5TDEH_F9PzxHuF3adymhKZZHnEVUW94yKY/
+Available for all baselines [here](https://docs.google.com/spreadsheets/d/1R1dtj2YFhPaOv4-VE1TpcCJ5_WzKO6rZ8ObMxJsM020/edit?usp=sharing).
 
 Task 1 decoded files:
 - `0-soft`: https://www.dropbox.com/s/ruom2g921t4kzzr/BASELINE-0SOFT-00-1.tar.gz
