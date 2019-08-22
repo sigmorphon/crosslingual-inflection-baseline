@@ -10,4 +10,4 @@ python src/train.py \
     --model model/sigmorphon19/task1/monotag-$arch/$pair --seed 0 \
     --embed_dim 200 --src_hs 400 --trg_hs 400 --dropout 0.4 \
     --src_layer 2 --trg_layer 1 --max_norm 5 \
-    --arch $arch --estop 1e-8 --epochs 50 --bs 20 --mono
+    --arch $arch --estop 1e-8 --epochs 1000 --bs 20 --mono --shuffle --patience 10

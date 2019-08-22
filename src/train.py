@@ -61,6 +61,8 @@ def get_args():
     parser.add_argument('--momentum', default=0.9, type=float, help='momentum of SGD')
     parser.add_argument('--estop', default=1e-8, type=float, help='early stopping criterion')
     parser.add_argument('--cooldown', default=0, type=int, help='cooldown of `ReduceLROnPlateau`')
+    parser.add_argument('--patience', default=0, type=int, help='patience of `ReduceLROnPlateau`')
+    parser.add_argument('--discount_factor', default=0.5, type=float, help='discount factor of `ReduceLROnPlateau`')
     parser.add_argument('--max_norm', default=0, type=float, help='gradient clipping max norm')
     parser.add_argument('--dropout', default=0.2, type=float, help='dropout prob')
     parser.add_argument('--embed_dim', default=100, type=int, help='embedding dimension')
@@ -74,6 +76,7 @@ def get_args():
     parser.add_argument('--saveall', default=False, action='store_true', help='keep all models')
     parser.add_argument('--mono', default=False, action='store_true', help='enforce monotonicity')
     parser.add_argument('--bestacc', default=False, action='store_true', help='select model by accuracy only')
+    parser.add_argument('--shuffle', default=False, action='store_true', help='shuffle the data')
     # yapf: enable
     return parser.parse_args()
 
@@ -101,10 +104,10 @@ class Trainer(object):
         # yapf: disable
         if dataset == Data.sigmorphon19task1:
             assert isinstance(train, list) and len(train) == 2
-            self.data = dataloader.TagSIGMORPHON2019Task1(train, dev, test)
+            self.data = dataloader.TagSIGMORPHON2019Task1(train, dev, test, opt.shuffle)
         elif dataset == Data.sigmorphon19task2:
             assert isinstance(train, list) and len(train) == 1
-            self.data = dataloader.TagSIGMORPHON2019Task2(train, dev, test)
+            self.data = dataloader.TagSIGMORPHON2019Task2(train, dev, test, opt.shuffle)
         else:
             raise ValueError
         # yapf: enable
@@ -171,26 +174,31 @@ class Trainer(object):
         self.models = [x[1] for x in sorted(models)]
         return self.load_model(self.models[-1][0])
 
-    def setup_training(self, optimizer, lr, min_lr, momentum, cooldown):
+    def setup_training(self, optimizer, lr, momentum):
         assert self.model is not None
-        if optimizer == 'SGD':
+        optimizer = optimizer.lower()
+        if optimizer == 'sgd':
             self.optimizer = torch.optim.SGD(
                 self.model.parameters(), lr, momentum=momentum)
-        elif optimizer == 'Adadelta':
+        elif optimizer == 'adadelta':
             self.optimizer = torch.optim.Adadelta(self.model.parameters(), lr)
-        elif optimizer == 'Adam':
+        elif optimizer == 'adam':
             self.optimizer = torch.optim.Adam(self.model.parameters(), lr)
+        elif optimizer == 'amsgrad':
+            self.optimizer = torch.optim.Adam(
+                self.model.parameters(), lr, amsgrad=True)
         else:
             raise ValueError
+
+    def setup_scheduler(self, min_lr, patience, cooldown, discount_factor):
         self.min_lr = min_lr
         self.scheduler = ReduceLROnPlateau(
             self.optimizer,
             'min',
-            patience=0,
+            patience=patience,
             cooldown=cooldown,
-            factor=0.5,
+            factor=discount_factor,
             min_lr=min_lr)
-        self.setup_evalutator()
 
     def save_training(self, model_fp):
         save_objs = (self.optimizer.state_dict(), self.scheduler.state_dict())
@@ -359,6 +367,7 @@ def main():
 
     trainer = Trainer(logger)
     trainer.load_data(opt.dataset, opt.train, opt.dev, test=opt.test)
+    trainer.setup_evalutator()
     if opt.load and opt.load != '0':
         if os.path.isfile(opt.load):
             start_epoch = trainer.load_model(opt.load) + 1
@@ -367,14 +376,16 @@ def main():
         else:
             raise ValueError
         logger.info('continue training from epoch %d', start_epoch)
-        trainer.setup_training(opt.optimizer, opt.lr, opt.min_lr, opt.momentum,
-                               opt.cooldown)
+        trainer.setup_training(opt.optimizer, opt.lr, opt.momentum)
+        trainer.setup_scheduler(opt.min_lr, opt.patience, opt.cooldown,
+                                opt.discount_factor)
         trainer.load_training(opt.model)
     else:
         start_epoch = 0
         trainer.build_model(opt)
-        trainer.setup_training(opt.optimizer, opt.lr, opt.min_lr, opt.momentum,
-                               opt.cooldown)
+        trainer.setup_training(opt.optimizer, opt.lr, opt.momentum)
+        trainer.setup_scheduler(opt.min_lr, opt.patience, opt.cooldown,
+                                opt.discount_factor)
 
     for epoch_idx in range(start_epoch, start_epoch + opt.epochs):
         trainer.train(epoch_idx, opt.bs, opt.max_norm)

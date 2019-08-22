@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 
 BOS = '<s>'
 EOS = '<\s>'
@@ -16,7 +17,7 @@ class Dataloader(object):
 
 
 class Seq2SeqDataLoader(Dataloader):
-    def __init__(self, train_file, dev_file, test_file=None):
+    def __init__(self, train_file, dev_file, test_file=None, shuffle=False):
         super().__init__()
         # assert os.path.isfile(train_file)
         # assert os.path.isfile(dev_file)
@@ -24,6 +25,7 @@ class Seq2SeqDataLoader(Dataloader):
         self.train_file = train_file
         self.dev_file = dev_file
         self.test_file = test_file
+        self.shuffle = shuffle
         self.batch_data = dict()
         self.nb_train, self.nb_dev, self.nb_test = 0, 0, 0
         self.nb_attr = 0
@@ -114,6 +116,8 @@ class Seq2SeqDataLoader(Dataloader):
             self.batch_data[key] = sorted(lst, key=lambda x: x[0])
 
         lst = self.batch_data[key]
+        if self.shuffle:
+            lst = np.random.permutation(lst)
         for start in range(0, len(lst), batch_size):
             yield self._batch_helper(lst[start:start + batch_size])
 
@@ -318,6 +322,8 @@ class TagSIGMORPHON2019Task1(SIGMORPHON2019Task1):
             self.batch_data[key] = sorted(lst, key=lambda x: x[0])
 
         lst = self.batch_data[key]
+        if self.shuffle:
+            lst = np.random.permutation(lst)
         for start in range(0, len(lst), batch_size):
             yield self._batch_helper(lst[start:start + batch_size])
 
