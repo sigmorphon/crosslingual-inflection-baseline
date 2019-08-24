@@ -98,16 +98,16 @@ class Trainer(object):
         self.last_devloss = float('inf')
         self.models = list()
 
-    def load_data(self, dataset, train, dev, test=None):
+    def load_data(self, dataset, train, dev, test=None, shuffle=False):
         assert self.data is None
         logger = self.logger
         # yapf: disable
         if dataset == Data.sigmorphon19task1:
             assert isinstance(train, list) and len(train) == 2
-            self.data = dataloader.TagSIGMORPHON2019Task1(train, dev, test, opt.shuffle)
+            self.data = dataloader.TagSIGMORPHON2019Task1(train, dev, test, shuffle)
         elif dataset == Data.sigmorphon19task2:
             assert isinstance(train, list) and len(train) == 1
-            self.data = dataloader.TagSIGMORPHON2019Task2(train, dev, test, opt.shuffle)
+            self.data = dataloader.TagSIGMORPHON2019Task2(train, dev, test, shuffle)
         else:
             raise ValueError
         # yapf: enable
@@ -366,7 +366,7 @@ def main():
         torch.cuda.manual_seed_all(opt.seed)
 
     trainer = Trainer(logger)
-    trainer.load_data(opt.dataset, opt.train, opt.dev, test=opt.test)
+    trainer.load_data(opt.dataset, opt.train, opt.dev, test=opt.test, shuffle=opt.shuffle)
     trainer.setup_evalutator()
     if opt.load and opt.load != '0':
         if os.path.isfile(opt.load):
